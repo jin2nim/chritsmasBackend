@@ -37,8 +37,21 @@ if ($method === 'POST') {
         $musicFile = $_FILES['src'];
         $imageFile = $_FILES['img'];
 
-        $musicPath = 'Music/song/' . basename($musicFile['name']);
-        $imagePath = 'Music/song/album/' . basename($imageFile['name']);
+        // folder path
+        $musicDir = 'Music/song/';
+        $imageDir = 'Music/song/album/';
+
+        // create if it does not exist
+        if (!is_dir($musicDir)) {
+            mkdir($musicDir, 0755, true);
+        }
+        if (!is_dir($imageDir)) {
+            mkdir($imageDir, 0755, true);
+        }
+
+        // set file path
+        $musicPath = $musicDir . basename($musicFile['name']);
+        $imagePath = $imageDir . basename($imageFile['name']);
 
         if (move_uploaded_file($musicFile['tmp_name'], $musicPath) && move_uploaded_file($imageFile['tmp_name'], $imagePath)) {
             $name = $_POST['song_name'];
