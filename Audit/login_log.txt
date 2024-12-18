@@ -1,2 +1,4 @@
 [2024-12-18 20:59:31] - User: haruka, Email: a@mail.com
 [2024-12-18 21:02:32] - User: admin, Email: admin@mail.com
+[2024-12-18 22:00:24] - User: haruka, Email: a@mail.com
+[2024-12-18 23:14:48] - User: admin, Email: admin@mail.com

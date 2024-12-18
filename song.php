@@ -60,8 +60,8 @@ if ($method === 'POST') {
                 "name" => $name,
                 "artist" => $artist,
                 "duration" => $duration,
-                "src" => $musicPath,
-                "img" => $imagePath
+                "src" => $musicUrl,
+                "img" => $imageUrl
             ]]);
         } else {
             echo json_encode(["status" => "error", "message" => "File upload failed"]);
