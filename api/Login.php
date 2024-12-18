@@ -29,7 +29,7 @@ $email = $conn->real_escape_string(trim($data["email"]));
 $password = trim($data["password"]);
 
 // Searching the user
-$query = "SELECT id, username, email, password, role FROM register WHERE email = '$email'";
+$query = "SELECT id, username, email, password, role, points FROM register WHERE email = '$email'";
 $result = $conn->query($query);
 
 if ($result->num_rows > 0) {

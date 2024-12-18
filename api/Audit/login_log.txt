@@ -43,3 +43,17 @@
 [2024-12-18 03:09:06] - User: lemon, Email: test@email.com
 [2024-12-18 04:22:00] - User: seoyun, Email: seoyun@gmail.com
 [2024-12-18 04:22:16] - User: lemon, Email: test@email.com
+[2024-12-18 04:55:38] - User: seoyun, Email: seoyun@gmail.com
+[2024-12-18 07:43:01] - User: seoyun, Email: seoyun@gmail.com
+[2024-12-18 07:46:27] - User: seoyun, Email: seoyun@gmail.com
+[2024-12-18 07:46:42] - User: lemon, Email: test@email.com
+[2024-12-18 07:51:23] - User: seoyun, Email: seoyun@gmail.com
+[2024-12-18 07:58:56] - User: lemon, Email: test@email.com
+[2024-12-18 17:00:41] - User: lemon, Email: test@email.com
+[2024-12-18 17:23:30] - User: lemon, Email: test@email.com
+[2024-12-18 19:40:31] - User: lemon, Email: test@email.com
+[2024-12-18 19:43:30] - User: lemon, Email: test@email.com
+[2024-12-18 19:48:53] - User: lemon, Email: test@email.com
+[2024-12-18 20:00:50] - User: lemon, Email: test@email.com
+[2024-12-18 20:01:52] - User: lemon, Email: test@email.com
+[2024-12-18 20:11:00] - User: lemon, Email: test@email.com

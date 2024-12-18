@@ -46,8 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
 
-    if (isset($data['deco_name'], $data['points'])) {
-        $name = $conn->real_escape_string(trim($data['deco_name']));
+    if (isset($data['name'], $data['points'])) {
+        $name = $conn->real_escape_string(trim($data['name']));
         $points = intval($data['points']);
         $imgPath = isset($data['img']) ? $conn->real_escape_string(trim($data['img'])) : "default.svg";
 
