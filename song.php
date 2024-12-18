@@ -32,21 +32,64 @@ if ($method === 'GET') {
 }
 
 if ($method === 'POST') {
-    $data = json_decode(file_get_contents("php://input"), true);
-    $id = $data['id'];
-    $name = $data['name'];
-    $artist = $data['artist'];
-    $duration = $data['duration'];
 
-    $conn->query("UPDATE music SET name='$name', artist='$artist', duration='$duration' WHERE id=$id");
-    echo json_encode(["status" => "update success"]);
+    if (isset($_FILES['src']) && isset($_FILES['img'])) {
+        $musicFile = $_FILES['src'];
+        $imageFile = $_FILES['img'];
+
+        $musicPath = 'Music/song/' . basename($musicFile['name']);
+        $imagePath = 'Music/song/album/' . basename($imageFile['name']);
+
+        if (move_uploaded_file($musicFile['tmp_name'], $musicPath) && move_uploaded_file($imageFile['tmp_name'], $imagePath)) {
+            $name = $_POST['song_name'];
+            $artist = $_POST['artist'];
+            $duration = $_POST['duration'];
+
+                        // backend URL
+                        $baseUrl = "http://localhost/webdev/test-haru/chritsmasBackend/";
+
+                        $musicUrl = $baseUrl . $musicPath;
+                        $imageUrl = $baseUrl . $imagePath;
+
+            $stmt = $conn->prepare("INSERT INTO music (song_name, artist, duration, src, img) VALUES (?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssss", $name, $artist, $duration, $musicPath, $imagePath);
+            $stmt->execute();
+
+            echo json_encode(["status" => "insert success", "newItem" => [
+                "id" => $stmt->insert_id,
+                "name" => $name,
+                "artist" => $artist,
+                "duration" => $duration,
+                "src" => $musicPath,
+                "img" => $imagePath
+            ]]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "File upload failed"]);
+        }
+    } else {
+
+        $data = json_decode(file_get_contents("php://input"), true);
+        $id = $data['id'];
+        $name = $data['name'];
+        $artist = $data['artist'];
+        $duration = $data['duration'];
+
+        $stmt = $conn->prepare("UPDATE music SET name=?, artist=?, duration=? WHERE id=?");
+        $stmt->bind_param("sssi", $name, $artist, $duration, $id);
+        $stmt->execute();
+
+        echo json_encode(["status" => "update success"]);
+    }
 }
 
 if ($method === 'DELETE') {
     $data = json_decode(file_get_contents("php://input"), true);
     $id = $data['id'];
 
-    $conn->query("DELETE FROM music WHERE id=$id");
+    $stmt = $conn->prepare("DELETE FROM music WHERE id=?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+
     echo json_encode(["status" => "delete success"]);
 }
 
