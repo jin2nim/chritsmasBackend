@@ -1,5 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: *");// Allow requests from React server
+header("Access-Control-Allow-Origin: http://localhost:3000"); // Allow requests from React server
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS"); // Allow HTTP methods
 header("Access-Control-Allow-Headers: Content-Type"); // Allow headers
 header("Content-Type: application/json");
