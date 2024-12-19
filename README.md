@@ -31,6 +31,7 @@ Import the provided database.sql file into your MySQL server:
   ```
 mysql -u your-username -p your-database-name < database.sql
 
+
 Ensure the following tables are included:
 register: Stores user data (e.g., email, hashed passwords, roles).
 music: Contains metadata for music tracks.
