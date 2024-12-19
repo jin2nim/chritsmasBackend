@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $servername = "localhost";
 $username = "root";
 $password = "mysql";
-$dbname = "test_db";
+$dbname = "christmasdb";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -36,6 +36,31 @@ if ($method === 'POST') {
     if (isset($_FILES['src']) && isset($_FILES['img'])) {
         $musicFile = $_FILES['src'];
         $imageFile = $_FILES['img'];
+
+        //file type check
+        $allowedType = 'audio/mpeg';//mp3
+        if ($musicFile['type'] !== $allowedType) {
+            echo json_encode(["status" => "error", "message" => "we accept only .mp3 for music file."]);
+            exit();
+        }
+        $allowedImgTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
+        if (!in_array($imageFile['type'], $allowedImgTypes)) {
+            echo json_encode(["status" => "error", "message" => "Invalid image format. Only jpeg, png, webp, and svg are allowed."]);
+            exit();
+        }
+
+        $maxSize = 5 * 1024 * 1024; // 5MB
+        if ($musicFile['size'] > $maxSize) {
+            echo json_encode(["status" => "error", "message" => "The file is too large."]);
+            exit();
+        }
+
+        // file path's length
+        $maxPathLength = 255;
+        if (strlen($musicFile['name']) > $maxPathLength) {
+            echo json_encode(["status" => "error", "message" => "Too long file path."]);
+            exit();
+        }
 
         // folder path
         $musicDir = 'Music/song/';
@@ -61,7 +86,7 @@ if ($method === 'POST') {
                         // backend URL
                         $baseUrl = "http://localhost/webdev/test-haru/chritsmasBackend/";
 
-                        $musicUrl = $baseUrl . $musicPath;
+                        $musicUrl = $baseUrl . 'Music/song'. $musicPath;
                         $imageUrl = $baseUrl . $imagePath;
 
             $stmt = $conn->prepare("INSERT INTO music (name, artist, duration, src, img) VALUES (?, ?, ?, ?, ?)");
