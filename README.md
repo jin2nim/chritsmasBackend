@@ -81,4 +81,4 @@ Frontend: React (integration-ready)
 Authentication: PHP Sessions
 
 ##📑 Database Design
-Ensure your MySQL server reflects the schema in the database.sql file. For a visual representation of the database structure, refer to the below screenshot.
+Ensure your MySQL server reflects the schema in the database.sql file.
