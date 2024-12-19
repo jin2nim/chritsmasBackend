@@ -28,7 +28,7 @@ Set Up the Database
 
 Import the provided database.sql file into your MySQL server:
 
-  ```
+
 mysql -u your-username -p your-database-name < database.sql
 
 
