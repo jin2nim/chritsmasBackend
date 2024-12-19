@@ -15,7 +15,7 @@ if ($conn->connect_error) {
     die(json_encode(["error" => "Database connection failed: " . $conn->connect_error]));
 }
 
-// SQL to fetch all users
+// SQL to fetch all users あとで他の情報をもってくる
 $stmt = $conn->prepare("
     SELECT u.userId, u.name, u.email, u.role, ui.image_path AS profile_image 
     FROM user_tb u 

@@ -5,6 +5,9 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Content-Type: application/json");
 
+//haruka added
+session_start();
+
 // DB connection
 $conn = new mysqli("localhost", "root", "mysql", "test_db");
 if ($conn->connect_error) {
@@ -46,6 +49,7 @@ if ($result->num_rows > 0) {
             "message" => "Login successful.",
             "user" => $user
         ]);
+        $_SESSION["login_id"] = $user["id"]; //haruka added id into session
     } else {
         // When the password doesn't match
         echo json_encode([

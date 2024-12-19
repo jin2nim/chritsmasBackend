@@ -54,7 +54,7 @@ if ($method === 'POST') {
         $imagePath = $imageDir . basename($imageFile['name']);
 
         if (move_uploaded_file($musicFile['tmp_name'], $musicPath) && move_uploaded_file($imageFile['tmp_name'], $imagePath)) {
-            $name = $_POST['song_name'];
+            $name = $_POST['name'];
             $artist = $_POST['artist'];
             $duration = $_POST['duration'];
 
@@ -64,7 +64,7 @@ if ($method === 'POST') {
                         $musicUrl = $baseUrl . $musicPath;
                         $imageUrl = $baseUrl . $imagePath;
 
-            $stmt = $conn->prepare("INSERT INTO music (song_name, artist, duration, src, img) VALUES (?, ?, ?, ?, ?)");
+            $stmt = $conn->prepare("INSERT INTO music (name, artist, duration, src, img) VALUES (?, ?, ?, ?, ?)");
             $stmt->bind_param("sssss", $name, $artist, $duration, $musicPath, $imagePath);
             $stmt->execute();
 
