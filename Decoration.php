@@ -10,11 +10,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// 데이터베이스 연결
-$servername = "localhost";
-$username = "root";
-$password = "mysql";
-$dbname = "christmasdb";
+$config = require 'config.php';
+
+$servername = $config['db_host'];
+$username = $config['db_user'];
+$password = $config['db_password'];
+$dbname = $config['db_name'];
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -24,7 +25,7 @@ if ($conn->connect_error) {
     exit();
 }
 
-// 데이터 조회
+// Bring the Data
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $sql = "SELECT id, deco_name, img, points FROM decoration";
     $result = $conn->query($sql);
@@ -41,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     exit();
 }
 
-// 데이터 추가 또는 수정
+// Data Add and Modify(Update)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
 
@@ -51,9 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $imgPath = isset($data['img']) ? $conn->real_escape_string(trim($data['img'])) : "default.svg";
 
         if (isset($data['id']) && $data['id']) {
-            // 수정 로직
+            // About Modify
             $id = intval($data['id']);
-            $updateQuery = "UPDATE decoration SET deco_name = '$name', points = '$points', img = '$imgPath' WHERE id = '$id'";
+            $updateQuery = "UPDATE ornaments SET deco_name = '$name', points = '$points', img = '$imgPath' WHERE id = '$id'";
 
             if ($conn->query($updateQuery) === TRUE) {
                 echo json_encode(["status" => "update success"]);
@@ -62,8 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo json_encode(["status" => "error", "message" => $conn->error]);
             }
         } else {
-            // 신규 추가 로직
-            $insertQuery = "INSERT INTO decoration (deco_name, points, img) VALUES ('$name', '$points', '$imgPath')";
+            // About Add
+            $insertQuery = "INSERT INTO ornaments (deco_name, points, img) VALUES ('$name', '$points', '$imgPath')";
             if ($conn->query($insertQuery) === TRUE) {
                 echo json_encode(["status" => "insert success"]);
             } else {

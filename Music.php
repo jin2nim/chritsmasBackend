@@ -2,11 +2,12 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 
-// 데이터베이스 연결
-$servername = "localhost";
-$username = "root";
-$password = "mysql";
-$dbname = "christmasdb";
+$config = require 'config.php';
+
+$servername = $config['db_host'];
+$username = $config['db_user'];
+$password = $config['db_password'];
+$dbname = $config['db_name'];
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 

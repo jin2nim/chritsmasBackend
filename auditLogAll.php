@@ -1,73 +1,49 @@
-<?php
-header("Access-Control-Allow-Origin: *");// Allow requests from React server
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS"); // Allow HTTP methods
-header("Access-Control-Allow-Headers: Content-Type"); // Allow headers
-header("Content-Type: application/json");
-
-$config = require 'config.php';
-
-try {
-    $pdo = new PDO(
-        "mysql:host={$config['db_host']};dbname={$config['db_name']};charset={$config['charset']}",
-        $config['db_user'],
-        $config['db_password']
-    );
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    $method = $_SERVER['REQUEST_METHOD'];
-
-    if ($method === 'GET') {
-        // Retrieve search, filter, and date parameters
-        $search = isset($_GET['search']) ? $_GET['search'] : null;
-        $filter = isset($_GET['filter']) ? $_GET['filter'] : null;
-        $start_date = isset($_GET['start_date']) ? $_GET['start_date'] : null;
-        $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : null;
-        $sort_order = isset($_GET['sort_order']) ? $_GET['sort_order'] : 'DESC'; // Default DESC
-    
-        // Construct base query
-        $query = "SELECT * FROM audit_log WHERE 1=1";
-    
-        // Add search condition
-        if ($search) {
-            $query .= " AND (email LIKE :search OR ip_address LIKE :search)";
-        }
-    
-        // Add filter condition
-        if ($filter) {
-            $query .= " AND login_state = :filter";
-        }
-    
-        // Add date range condition
-        if ($start_date && $end_date) {
-            $query .= " AND timestamp BETWEEN :start_date AND :end_date";
-        }
-    
-        // Add sorting
-        $query .= " ORDER BY timestamp $sort_order";
-    
-        // Prepare statement
-        $stmt = $pdo->prepare($query);
-    
-        // Bind parameters
-        if ($search) {
-            $stmt->bindValue(':search', '%' . $search . '%', PDO::PARAM_STR);
-        }
-        if ($filter) {
-            $stmt->bindValue(':filter', $filter, PDO::PARAM_STR);
-        }
-        if ($start_date && $end_date) {
-            $stmt->bindValue(':start_date', $start_date, PDO::PARAM_STR);
-            $stmt->bindValue(':end_date', $end_date, PDO::PARAM_STR);
-        }
-    
-        // Execute and fetch results
-        $stmt->execute();
-        $logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-        echo json_encode($logs);
-    }
-    
-} catch (PDOException $e) {
-    echo json_encode(['error' => $e->getMessage()]);
-}
+<?php  
+header('Access-Control-Allow-Origin: *');  
+header('Content-Type: application/json');  
+  
+$config = require 'config.php';  
+  
+$servername =$config['db_host'];  
+$username =$config['db_user'];  
+$password =$config['db_password'];  
+$dbname =$config['db_name'];  
+  
+$conn = new mysqli($servername, $username, $password, $dbname);  
+  
+if ($conn->connect_error) {  
+   http_response_code(500);  
+   echo json_encode(["error" => $conn->connect_error]);  
+   exit();  
+}  
+  
+// POST 데이터 확인  
+$jsonData = json_decode(file_get_contents("php://input"), true);  
+  
+// 디버그: JSON 데이터 확인  
+error_log("Received JSON data: " . print_r($jsonData, true));  
+  
+// Audit Log 기록  
+$userID = $jsonData['userID'] ?? null;  
+$email = $jsonData['email'] ?? null;  
+$ip_address = $jsonData['ip_address'] ?? '';  
+$action = $jsonData['action'] ?? '';  
+$message = $jsonData['message'] ?? '';  
+  
+$stmt =$conn->prepare(  
+   "INSERT INTO audit_log (userID, email, ip_address, action, message, timestamp)  
+    VALUES (?, ?, ?, ?, ?, NOW())"  
+);  
+  
+$stmt->bind_param("issss", $userID,$email, $ip_address, $action, $message);  
+  
+if ($stmt->execute()) {  
+   echo json_encode(["status" => "success"]);  
+} else {  
+   http_response_code(500);  
+   echo json_encode(["status" => "error", "error" => $stmt->error]);  
+}  
+  
+$stmt->close();  
+$conn->close();  
 ?>

@@ -17,10 +17,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 
     $id = intval($input['id']);
 
-    $servername = "localhost";
-    $username = "root";
-    $password = "mysql";
-    $dbname = "christmasdb";
+    $config = require 'config.php';
+
+    $servername = $config['db_host'];
+    $username = $config['db_user'];
+    $password = $config['db_password'];
+    $dbname = $config['db_name'];
 
     $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -30,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     }
 
     try {
-        $stmt = $conn->prepare("DELETE FROM decorations WHERE id = ?");
+        $stmt = $conn->prepare("DELETE FROM decoration WHERE id = ?");
         if (!$stmt) {
             throw new Exception('Prepare failed');
         }
